@@ -48,12 +48,12 @@ const provider = new Web3.providers.HttpProvider(process.env.ROPSTEN_NODE_URL)
 
 const web3 = new Web3(provider)
 const account = web3.eth.accounts.privateKeyToAccount(process.env.TESTNET_ADMIN_PRIVATE_KEY)
+web3.eth.accounts.wallet.add(account);
 const KNAddress= '0x920B322D4B8BAB34fb6233646F5c87F87e79952b';
 const deployer = new FPR.Deployer(web3)
-deployer.web3.eth.accounts.wallet.add(account)
 
 (async ()=>{
-    const addresses = await deployer.deploy(account, KNAddress);
+    const addresses = await deployer.deploy(account.address, KNAddress);
    console.log(`Reserve Contract: ${addresses.reserveContract}`)
    console.log(`Conversion Contract + ${addresses.conversionRateContract}`)
   })();
@@ -78,7 +78,7 @@ const tokenInfo = new conversionRates.TokenControlInfo(100000000000000,440000000
 
 (async () => {
    console.log('Adding token')
- await manageReserve.addToken(account, KTTokenAddress, tokenInfo)
+ await manageReserve.addToken(account.address, KTTokenAddress, tokenInfo)
    })();
 ```
 
@@ -107,7 +107,7 @@ After that, give the operator permission for the conversionRates contract.
 
 const CRContract = new FPR.ConversionRatesContract(web3, addresses.conversionRates)
 
-CRContract.addOperator(account, account.address)
+CRContract.addOperator(account.address, account.address)
       .then( result => {
     console.log(result)
     })
@@ -128,9 +128,10 @@ We will get the current block number and set initial rate, this would mean that 
    const blockNumber = await web3.eth.getBlockNumber();
   
    console.log("Setting base buy/sell rates")
-   await reserveManager.setRate(operator, [rate] , blockNumber);
+   await reserveManager.setRate(operator.address, [rate] , blockNumber);
    console.log("done");
 })();
+```
 
 
 ## 5. See Your Quote For This Pair On Testnet 
