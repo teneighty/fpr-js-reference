@@ -14,6 +14,6 @@ web3.eth.accounts.wallet.add(account)
 
 const manageReserve = new FPR.Reserve(web3, addresses);
 (async () => {
-   console.log('Adding token')
- await manageReserve.addToken(account, KTTokenAddress, tokenInfo)
+    console.log('Adding token')
+    await manageReserve.addToken(account.address, KTTokenAddress, tokenInfo)
    })();
